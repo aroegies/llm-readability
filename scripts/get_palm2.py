@@ -9,7 +9,7 @@ parameters = {
     "temperature": 1.0,
 }
 
-@retry(wait=wait_exponential(multiplier=1,min=4,max=30))
+#@retry(wait=wait_exponential(multiplier=1,min=4,max=30))
 def process_chat(msg):
     chat = chat_model.start_chat()
     return chat.send_message(msg, **parameters).text
@@ -20,6 +20,7 @@ with open(sys.argv[1]) as promptsfil:
   count=0
   for prompttxt in promptsfil:
     prompt=json.loads(prompttxt)
+    print(prompt)
     msg= prompt['instruction']+"\n"+ prompt['input']
     prompt['output']=process_chat(msg)
     outfile.write(json.dumps(prompt))

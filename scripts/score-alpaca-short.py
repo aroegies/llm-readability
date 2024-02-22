@@ -2,7 +2,8 @@ from readability import Readability
 import json, sys, os, re
 from nltk.tokenize import TweetTokenizer
 from nltk.stem.porter import PorterStemmer
-
+from nltk.corpus import stopwords
+from nltk.corpus import cmudict
 
 
 cldict = dict()
@@ -43,6 +44,15 @@ def is_dale_chall_complex(t):
   stem = porter_stemmer.stem(t.lower())
   return stem not in dale_chall_set
 
+d = cmudict.dict()
+def syllcount(word):
+  try:
+    return [len([y for y in x if y[-1].isdigit()]) for x in d[word.lower()]][0]
+  except:
+    return syllable_count(word)
+
+
+stop_words = set(stopwords.words('english'))
 with open(sys.argv[1]) as responses:
    elts = json.load(responses)
    for elt in elts:
@@ -81,10 +91,12 @@ with open(sys.argv[1]) as responses:
         syll_count = 0
         for t in tokens:
           if not is_punct(t):
+            if t.lower() in stop_words:
+              continue
             word_count+=1
             chars_count += len(t)
             dc_complex += 1 if is_dale_chall_complex(t) else 0
-            syll_count += syllable_count(t) 
+            syll_count += syllcount(t) 
         if word_count != 0:
           print(word_count, dc_complex/word_count, chars_count/word_count,syll_count/word_count)
         continue

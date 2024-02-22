@@ -16,6 +16,7 @@ with open(sys.argv[2]) as promptsfil:
   count=0
   for prompttxt in promptsfil:
     prompt=json.loads(prompttxt)
+    print(prompt)
     prompt['output']= query_gpt([{"role":"user","content":prompt['instruction']},{"role":"user","content":prompt['input']}])
     outfile.write(json.dumps(prompt))
     outfile.write("\n")

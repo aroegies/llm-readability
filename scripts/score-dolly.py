@@ -30,9 +30,15 @@ with open(sys.argv[1]) as responses:
           gl = 12
 
         fkdict[gl] = fkdict.get(gl,0)+1
-
         dc = scores.dale_chall()
-        dcdict[dc.grade_levels[0]] = dcdict.get(dc.grade_levels[0],0)+1  
+        dcgrade = dc.grade_levels[0]
+        dcgl = 13
+        if dcgrade == '1' or dcgrade == '5':
+            dcgl = 6
+        elif dcgrade == '7' or dcgrade == '9':
+            dcgl = 9
+        elif dcgrade == '11':
+            dcgl = 12
         cl = scores.coleman_liau()
         gl = 13
         if int(cl.grade_level) <= 6:
